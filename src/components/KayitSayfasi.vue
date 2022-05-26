@@ -2,17 +2,17 @@
   <v-container>
     <v-row justify="space-between">
       <v-col>
-        <!--form içerisinde bulunan datalar tetiklenme ile kayıt altına alınır-->
+        <!--form içerisinde bulunan datalar tetiklenme ile kayıt altına alınır.-->
         <v-form ref="form">
         <!--değer girişleri için gereken inputlar-->
           <v-text-field label="Kullanıcı Adı"></v-text-field>
 
-        <!--sifre aynı olmalı-karakter kontrolu- 1 büyük 1 küçük dahil en az 8 karakter-şifre güçlüğü belirlenicek-->
+        <!--sifre aynı olmalı-karakter kontrolu- 1 büyük 1 küçük dahil en az 8 karakter-şifre güçlüğü belirlenicek.-->
           <v-text-field label="Şifre"></v-text-field>
           <v-text-field label="Şifre Tekrar"></v-text-field>
 
           <v-col>
-            <!--şartlar sağlanırsa kayıt olunup başarılı mesajı gösterilsin-->
+            <!--şartlar sağlanırsa kayıt olunup başarılı mesajı gösterilsin.-->
             <v-btn style="background-color: lightblue; float: right"
               >Kayıt ol</v-btn
             ></v-col
