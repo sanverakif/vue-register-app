@@ -1,0 +1,16 @@
+Eklenen kütüphaneler
+Vuetify: View tarafında tasarımlarımızı geliştirirken kullanma ihtiyacı duyduğumuz bir Kütüphanedir
+
+
+
+Eklentiler
+Vue-router: sayfalar arası geçişte kullanırız, deneme yapıldı.
+
+
+
+Projede istenilen
+Giriş sağlanılıcak alanların validasyon kontrolleri..
+Sifre ve sifre 2 aynı değeri içermeli && 1 büyük ve 1 küçük dahil en az 8 karakter olmalı && sifre güçlüğü belirtilmeli
+Buton tetiklendiğinde şartlar sağlanılıyorsa başarılı mesajı çıkartılsın.
+
+
