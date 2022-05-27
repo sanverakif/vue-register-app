@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HelloWorld from "../components/HelloWorld";
-import KayitSayfasi from "../components/KayitSayfasi";
+import KayitSayfasi from "../views/KayitSayfasi";
 Vue.use(VueRouter)
 
 const routes = [{
