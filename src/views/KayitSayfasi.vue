@@ -1,40 +1,68 @@
 <template>
-  <v-container>
-    <v-row justify="space-between">
-      <v-col>
-        <!--form içerisinde bulunan datalar tetiklenme ile kayıt altına alınır.-->
-        <v-form ref="form" id="forms">
-          <!--değer girişleri için gereken inputlar-->
-          <v-text-field
-            label="Kullanıcı Adı"
-            id="kullaniciAdi"
-            v-model="kullaniciAdi"
-          ></v-text-field>
+  <div class="mainDiv">
+    <br /><br />
+    <div><img class="center" src="../assets/userIcon.png" /></div>
+    <v-container>
+      <v-row justify="space-between">
+        <v-col>
+          <!--form içerisinde bulunan datalar tetiklenme ile kayıt altına alınır.-->
+          <v-form ref="form" id="forms">
+            <!--değer girişleri için gereken inputlar-->
+            <v-text-field
+              label="Kullanıcı Adı"
+              placeholder="abcd123"
+              id="kullaniciAdi"
+              v-model="kullaniciAdi"
+            ></v-text-field>
 
-          <!--sifre aynı olmalı-karakter kontrolu- 1 büyük 1 küçük dahil en az 8 karakter-şifre güçlüğü belirlenicek.-->
-          <v-text-field label="Şifre" v-model="sifre"> </v-text-field>
-          <v-text-field
-            label="Şifre Tekrar"
-            v-model="sifreTekrar"
-          ></v-text-field>
+            <!--İnputa girişin sağlanması için belirtilen şekilde girilmelidir ve bunun geçerli olması için ise required değerini kullanmamız gerekmektedir
+            
+            
+            -->
 
-          <v-col>
-            <!--şartlar sağlanırsa kayıt olunup başarılı mesajı gösterilsin.-->
-            <v-btn
-              style="background-color: lightblue; float: right"
-              @click="passWordLogin"
-              >Kayıt ol</v-btn
+            <v-text-field
+              v-model="mail"
+              label="Mail"
+              placeholder="sa@gmail.com"
+              id="mail"
+              :rules="mailRules"
+              required
             >
-          </v-col>
-        </v-form>
-      </v-col>
-      <!--Karakter sınırı: girilen değer 2.tekrarda aynı olmalıdır-->
-      <v-col cols="12" md="8" style="margin-top: 30px">
-        <v-slider label="Max characters"></v-slider>
-        <v-col style="margin-top: 70px">{{ sifreSonuc }}</v-col>
-      </v-col>
-    </v-row>
-  </v-container>
+            </v-text-field>
+
+            <!--sifre aynı olmalı-karakter kontrolu- 1 büyük 1 küçük dahil en az 8 karakter-şifre güçlüğü belirlenicek.-->
+            <v-text-field label="Şifre" placeholder="Ankara" v-model="sifre">
+            </v-text-field>
+            <v-text-field
+              label="Şifre Tekrar"
+              placeholder="Ankara"
+              v-model="sifreTekrar"
+            ></v-text-field>
+            <v-col>
+              <td style="float: left">
+                <!--Karakter sınırı: girilen değer 2.tekrarda aynı olmalıdır-->
+                <v-slider
+                  label="Max characters"
+                  style="width: 200px"
+                ></v-slider>
+              </td>
+              <td style="float: right">
+                <!--şartlar sağlanırsa kayıt olunup başarılı mesajı gösterilsin.-->
+                <v-btn
+                  style="background-color: lightblue; float: right"
+                  @click="passWordLogin"
+                  >Kayıt ol</v-btn
+                >
+              </td>
+               
+            </v-col>
+          
+          </v-form>
+        </v-col>
+      </v-row>
+       <v-col>{{ sifreSonuc }}</v-col>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -44,13 +72,18 @@ export default {
 
   data() {
     return {
+      mail: "",
+      mailRules: [
+        (v) => !!v || "E-mail is required",
+        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+      ],
       kullaniciAdi: "",
       kullanici: [],
       sifre: "",
       sifreTekrar: "",
       karakterSinir: 0,
       sifreSonuc: "",
-      sifreKural: "^(?=.*?[A-Z])(?=.*?[a-z]).{6,}$",
+      sifreKural: "^(?=.*?[A-Z])(?=.*?[a-z]).{6,}$", // regex kullanımı bakılıyor
     };
   },
   methods: {
@@ -87,12 +120,12 @@ export default {
 
       // }
 
-      if (sifre == sifreTekrar) {
-        this.sifreSonuc = "sifreler aynı";
+      if (sifre == sifreTekrar && sifre != null && sifreTekrar != null) {
+        this.sifreSonuc = "Şifreler aynı";
         this.reset();
         return true;
       } else {
-        this.sifreSonuc = "sifreler aynı değil";
+        this.sifreSonuc = "Geçersiz şifre";
         this.reset();
         return false;
       }
@@ -112,3 +145,22 @@ export default {
   },
 };
 </script>
+
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 25%;
+}
+.mainDiv {
+  margin-left: auto;
+  margin-right: auto;
+  background-color: darkseagreen;
+  width: 400px;
+  height: 520px;
+}
+img {
+  border-radius: 50%;
+}
+</style>

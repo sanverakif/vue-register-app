@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HelloWorld from "../components/HelloWorld";
 import KayitSayfasi from "../views/KayitSayfasi";
+// import RegisterView from "../views/RegisterView";
 Vue.use(VueRouter)
 
 const routes = [{
@@ -15,7 +16,11 @@ const routes = [{
         name: 'KayitSayfasi',
         component: KayitSayfasi
     },
-
+    // {
+    //     path: '/RegisterView',
+    //     name: 'RegisterView',
+    //     component: RegisterView
+    // },
 ]
 
 const router = new VueRouter({
