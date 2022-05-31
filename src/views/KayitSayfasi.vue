@@ -76,16 +76,35 @@ export default {
 
   data() {
     return {
+      sifreGucu: {
+        cokKotu: "Çok kötü",
+        kotu: "Kotu",
+        orta: "Orta",
+        iyi: "İyi",
+      },
       //data
       kullaniciAdi: "",
       mail: "",
       sifre: "",
       sifreTekrar: "",
       counter: 0,
-      
+
       //valid-regex
       mailKural: /.+@.+\.com+/,
+      //Çok Kötü karakter güçlüğü: 8 karakter ve 1 küçük harf veye 1 büyük harf
+      tooBadStrength: /(?=.*[a-z])[a-za-z]{8,}$/,
+      tooBadStrength2: /(?=.*[A-Z])[A-ZA-Z]{8,}$/,
+      //Kötü karakter güçlüğü: 8 karakter, 1 büyük ve 1 küçük harf
+      badStrength: /(?=.*[a-z])(?=.*[A-Z])[a-zA-Z]{8,}$/,
+      //Orta karaktter güçlüğü: 8 karakter, 1 büyük 1 küçük 1 rakam
+      midStrength: /(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+      //İyi karakter güçlüğü: 1 büyük,1 küçük,1 sayı ve 1 özel karakter
+      goodStrength:
+        /(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+
+      // En az 8 karakter, 1 büyük ve 1 küçük harf
       sifreKural: /(?=.*[a-z])(?=.*[A-Z])[a-zA-Z]{8,}$/,
+      // En az 8 karakter, 1 büyük 1 küçük
       // sifreKural: "^(?=.*?[A-Z])(?=.*?[a-z]).{6,}$", // regex kullanımı bakılıyor
 
       //labelResult// musterinin yanlış girdiği değerlere karşın hata metini yazdırıp uyarıyoruz
@@ -116,7 +135,12 @@ export default {
       _mailKural,
       _sifre,
       _sifreTekrar,
-      _sifreKural
+      _sifreKural,
+      _tooBadStrength,
+      _tooBadStrength2,
+      _badStrength,
+      _midStrength,
+      _goodStrength
     ) {
       _kullaniciAdi = this.kullaniciAdi;
       _mail = this.mail;
@@ -124,6 +148,11 @@ export default {
       _sifre = this.sifre;
       _sifreTekrar = this.sifreTekrar;
       _sifreKural = this.sifreKural;
+      _tooBadStrength = this.tooBadStrength;
+      _tooBadStrength2 = this.tooBadStrength2;
+      _badStrength = this.badStrength;
+      _midStrength = this.midStrength;
+      _goodStrength = this.goodStrength;
 
       if (_kullaniciAdi != null) {
         //text alanı
@@ -144,24 +173,47 @@ export default {
         return false;
       }
 
-      if (_sifre != null && _sifreKural.test(_sifre)) {
-        //text alanı
-        console.log("Şifre girişi başarılı");
-        document.getElementById("_mail").innerHTML = this.sifreResultText;
-      } else {
-        document.getElementById("_mail").innerHTML = this.sifreResultText2;
-        return false;
+      if (_sifre != null) {
+        if (_tooBadStrength.test(_sifre) || _tooBadStrength2.test(_sifre)) {
+          console.log("Şifre gücünüz çok kötü");
+          document.getElementById("_mail").innerHTML = this.sifreGucu.cokKotu;
+        } else if (_sifre != null && _badStrength.test(_sifre)) {
+          console.log("Şifre gücünüz kötü");
+          document.getElementById("_mail").innerHTML = this.sifreGucu.kotu;
+        } else if (_sifre != null && _midStrength.test(_sifre)) {
+          console.log("Şifre gücünüz orta");
+          document.getElementById("_mail").innerHTML = this.sifreGucu.orta;
+        } else if (_sifre != null && _goodStrength.test(_sifre)) {
+          console.log("Şifre gücünüz iyi");
+          document.getElementById("_mail").innerHTML = this.sifreGucu.iyi;
+        } else {
+          document.getElementById("_mail").innerHTML = this.sifreResultText2;
+          return false;
+        }
       }
 
-      if (_sifreTekrar != null && _sifreKural.test(_sifreTekrar)) {
-        //text alanı
-        console.log("Şifre tekrarı başarılı");
-        document.getElementById("_mail").innerHTML = this.sifreTekrarResultText;
-      } else {
-        document.getElementById("_mail").innerHTML =
-          this.sifreTekrarResultText2;
-        return false;
+      if (_sifreTekrar != null) {
+        if (
+          (_sifreTekrar != null && _tooBadStrength.test(_sifreTekrar)) ||
+          _tooBadStrength2.test(_sifreTekrar)
+        ) {
+          console.log("Şifre gücünüz çok kötü");
+          document.getElementById("_mail").innerHTML = this.sifreGucu.cokKotu;
+        } else if (_sifreTekrar != null && _badStrength.test(_sifreTekrar)) {
+          console.log("Şifre gücünüz kötü");
+          document.getElementById("_mail").innerHTML = this.sifreGucu.kotu;
+        } else if (_sifreTekrar != null && _midStrength.test(_sifreTekrar)) {
+          console.log("Şifre gücünüz orta");
+          document.getElementById("_mail").innerHTML = this.sifreGucu.orta;
+        } else if (_sifreTekrar != null && _goodStrength.test(_sifreTekrar)) {
+          console.log("Şifre gücünüz iyi");
+          document.getElementById("_mail").innerHTML = this.sifreGucu.iyi;
+        } else {
+          document.getElementById("_mail").innerHTML = this.sifreResultText2;
+          return false;
+        }
       }
+
       if (_sifre == _sifreTekrar) {
         //text alanı
         console.log("Şifreler eşleşti");
