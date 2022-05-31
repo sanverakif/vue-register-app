@@ -8,7 +8,7 @@
         <v-row justify="space-between">
           <v-col>
             <!--form içerisinde bulunan datalar tetiklenme ile kayıt altına alınır.-->
-            <v-form ref="form" id="forms">
+            <v-form ref="form" id="forms" @submit="signUp">
               <!--değer girişleri için gereken inputlar-->
               <v-text-field
                 label="Kullanıcı Adı"
@@ -17,15 +17,15 @@
                 v-model="kullaniciAdi"
               ></v-text-field>
 
-              <!--İnputa girişin sağlanması için belirtilen şekilde girilmelidir ve bunun geçerli olması için ise required değerini kullanmamız gerekmektedir.
+              <!--İnputa girişin sağlanması için belirtilen şekilde girilmelidir ve bunun geçerli olması için ise required değerini kullanmamız gerekmektedir.:
+              rules="mailRules"
+                required
             -->
               <v-text-field
                 v-model="mail"
                 label="Mail"
                 placeholder="sa@gmail.com"
                 id="mail"
-                :rules="mailRules"
-                required
               >
               </v-text-field>
 
@@ -52,9 +52,8 @@
                 </td>
                 <td style="float: right">
                   <!--şartlar sağlanırsa kayıt olunup başarılı mesajı gösterilsin.-->
-                  <v-btn class="btnClick" @click="passWordLogin">
-                    Kayıt ol
-                  </v-btn>
+                  <v-btn class="btnClick" type="submit"> Kayıt ol </v-btn>
+                  <v-btn class="btnClear" @click="signUpClear">Temizle</v-btn>
                 </td>
               </v-col>
             </v-form>
@@ -76,6 +75,7 @@ export default {
       // a: 5,
 
       mail: "",
+      mailKural: /.+@.+\.com+/,
       mailRules: [
         //boş ve null olamaz? / != eşit değil !== tür ve değeri esit değil !=null değilse
         (v) => !!v || "E-mail is required",
@@ -86,13 +86,12 @@ export default {
         (v) => /.+@.+\.com+/.test(v) || "E-mail must be valid",
       ],
       kullaniciAdi: "",
-      kullanici: [],
       sifre: "",
       sifreTekrar: "",
+      sifreKural: /(?=.*[a-z])(?=.*[A-Z])[a-zA-Z]{8,}$/,
       karakterSinir: 0,
       sifreSonuc: "",
       // sifreKural: "^(?=.*?[A-Z])(?=.*?[a-z]).{6,}$", // regex kullanımı bakılıyor
-      sifreKural: "/(?=.*[a-z])(?=.*[A-Z])[a-zA-Z]{8,}/",
     };
   },
   methods: {
@@ -104,53 +103,100 @@ export default {
     // },
 
     //form içerisinde 2 adet şifre girisi vardır Girilen değerler model aracılığı ile viewa gider
-    passWordLogin(_kullaniciAdi, _mail, _sifre, _sifreTekrar) {
+
+    signUp: function (
+      _kullaniciAdi,
+      _mail,
+      _mailKural,
+      _sifre,
+      _sifreTekrar,
+      _sifreKural
+    ) {
       _kullaniciAdi = this.kullaniciAdi;
       _mail = this.mail;
+      _mailKural = this.mailKural;
+      _sifre = this.sifre;
+      _sifreTekrar = this.sifreTekrar;
+      _sifreKural = this.sifreKural;
 
-      _sifre = this.sifreKural.test(this.sifre);
-      _sifreTekrar = this.sifreKural.test(this.sifreTekrar);
-
-      // _sifre = this.sifre;
-      // _sifreTekrar = this.sifreTekrar;
-
-      // this.sifreKural.test(_sifre);
-      // this.sifreKural.test(_sifreTekrar);
-      // _sifre(this.sifreKural);
-      // _sifreTekrar(this.sifreKural);
-
-      if (
-        _kullaniciAdi != null &&
-        // _mail(this.mailRules) !== true &&
-        _sifre == _sifreTekrar &&
-        _sifre != null &&
-        _sifreTekrar != null
-      ) {
-        this.sifreSonuc = "Şifreler aynı";
-        this.reset();
-        return true;
-      } else {
-        this.sifreSonuc = "Geçersiz şifre";
-        this.reset();
-        return false;
+      if (_kullaniciAdi != null) {
+        //text alanı
+        console.log("Kullanıcı girişi başarılı");
+      }
+      false;
+      if (_mail != null && _mailKural.test(_mail)) {
+        //text alanı
+        console.log("Mail girişi başarılı");
+      }
+      false;
+      if (_sifre != null && _sifreKural.test(_sifre)) {
+        //text alanı
+        console.log("Şifre girişi başarılı");
       }
 
-      // if (_sifre == _sifreTekrar && _sifre != null && _sifreTekrar != null) {
-      //   this.sifreSonuc = "Şifreler aynı";
-      //   this.reset();
-      //   return true;
-      // } else {
-      //   this.sifreSonuc = "Geçersiz şifre";
-      //   this.reset();
-      //   return false;
-      // }
+      if (_sifreTekrar != null && _sifreKural.test(_sifreTekrar)) {
+        //text alanı
+        console.log("Şifre tekrarı başarılı");
+      }
+      if (_sifre == _sifreTekrar) {
+        //text alanı
+        console.log("Şifreler eşleşti");
+        return true;
+      }
+      this.signUpClear();
+      return false;
     },
-
-    reset() {
-      /*getelementby id ve ref : document içerisindeki bir elemente veya idye ulaşmak istersek bunu $ref kullanarak da ulaşabiliriz
-      asağıda iste bir kosul belirtmeden form içerisindeki istenilen elementlerin değerlirini temizledik*/
+    signUpClear: function () {
       this.$refs.form.reset();
     },
+
+    // passWordLogin(_kullaniciAdi, _mail, _sifre, _sifreTekrar) {
+    //   _kullaniciAdi = this.kullaniciAdi;
+    //   _mail = this.mail;
+
+    //   _sifre = this.sifreKural.test(this.sifre);
+    //   _sifreTekrar = this.sifreKural.test(this.sifreTekrar);
+
+    //   // _sifre = this.sifre;
+    //   // _sifreTekrar = this.sifreTekrar;
+
+    //   // this.sifreKural.test(_sifre);
+    //   // this.sifreKural.test(_sifreTekrar);
+    //   // _sifre(this.sifreKural);
+    //   // _sifreTekrar(this.sifreKural);
+
+    //   if (
+    //     _kullaniciAdi != null &&
+    //     // _mail(this.mailRules) !== true &&
+    //     _sifre == _sifreTekrar &&
+    //     _sifre != null &&
+    //     _sifreTekrar != null
+    //   ) {
+    //     this.sifreSonuc = "Şifreler aynı";
+    //     this.reset();
+    //     return true;
+    //   } else {
+    //     this.sifreSonuc = "Geçersiz şifre";
+    //     this.reset();
+    //     return false;
+    //   }
+
+    //   // if (_sifre == _sifreTekrar && _sifre != null && _sifreTekrar != null) {
+    //   //   this.sifreSonuc = "Şifreler aynı";
+    //   //   this.reset();
+    //   //   return true;
+    //   // } else {
+    //   //   this.sifreSonuc = "Geçersiz şifre";
+    //   //   this.reset();
+    //   //   return false;
+    //   // }
+    // },
+
+    // reset() {
+    //   /*getelementby id ve ref : document içerisindeki bir elemente veya idye ulaşmak istersek bunu $ref kullanarak da ulaşabiliriz
+    //   asağıda iste bir kosul belirtmeden form içerisindeki istenilen elementlerin değerlirini temizledik*/
+    //   this.$refs.form.reset();
+    // },
   },
 };
 </script>
@@ -175,5 +221,8 @@ img {
 btnClick {
   background-color: lightblue;
   float: right;
+}
+btnClear {
+  margin-left: 5px;
 }
 </style>
