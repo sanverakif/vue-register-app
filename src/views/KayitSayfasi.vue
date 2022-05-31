@@ -1,5 +1,6 @@
 <template>
   <v-form>
+    <p id="_mail"></p>
     <div class="mainDiv">
       <!-- {{ c() }} -->
       <br /><br />
@@ -11,6 +12,7 @@
             <v-form ref="form" id="forms" @submit="signUp">
               <!--değer girişleri için gereken inputlar-->
               <v-text-field
+                style="width: 300px"
                 label="Kullanıcı Adı"
                 placeholder="abcd123"
                 id="kullaniciAdi"
@@ -22,22 +24,24 @@
                 required
             -->
               <v-text-field
+                style="width: 300px"
                 v-model="mail"
                 label="Mail"
                 placeholder="sa@gmail.com"
-                id="mail"
               >
               </v-text-field>
+              <p id="_mail"></p>
 
               <!--sifre aynı olmalı-karakter kontrolu- 1 büyük 1 küçük dahil en az 8 karakter-şifre güçlüğü belirlenicek.-->
-              <v-text-field label="Şifre" placeholder="Ankara" v-model="sifre">
-                <!-- v-validate="{
-                  required: true,
-                  min: 8,
-                  regex: /^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z]{8,}$/,
-                  }" -->
+              <v-text-field
+                label="Şifre"
+                placeholder="Ankara"
+                v-model="sifre"
+                style="width: 300px"
+              >
               </v-text-field>
               <v-text-field
+                style="width: 300px"
                 label="Şifre Tekrar"
                 placeholder="Ankara"
                 v-model="sifreTekrar"
@@ -46,6 +50,7 @@
                 <td style="float: left">
                   <!--Karakter sınırı: girilen değer 2.tekrarda aynı olmalıdır-->
                   <v-slider
+                    v-model="slider"
                     label="Max characters"
                     style="width: 200px"
                   ></v-slider>
@@ -59,7 +64,6 @@
             </v-form>
           </v-col>
         </v-row>
-        <v-col>{{ sifreSonuc }}</v-col>
       </v-container>
     </div>
   </v-form>
@@ -72,37 +76,39 @@ export default {
 
   data() {
     return {
-      // a: 5,
-
-      mail: "",
-      mailKural: /.+@.+\.com+/,
-      mailRules: [
-        //boş ve null olamaz? / != eşit değil !== tür ve değeri esit değil !=null değilse
-        (v) => !!v || "E-mail is required",
-        /*
-        yazılan koşulların olup olmadığını kontrol eder
-        https://erdincuzun.com/ileri-python/regular-expressions-duzenli-ifadeler/ 3.1.  = '.' karakteri isteniler karakterin harfini tutar öncesi ve sonrası 'sed.a.t' = seDaT
-        */
-        (v) => /.+@.+\.com+/.test(v) || "E-mail must be valid",
-      ],
+      //data
       kullaniciAdi: "",
+      mail: "",
       sifre: "",
       sifreTekrar: "",
+      counter: 0,
+      
+      //valid-regex
+      mailKural: /.+@.+\.com+/,
       sifreKural: /(?=.*[a-z])(?=.*[A-Z])[a-zA-Z]{8,}$/,
-      karakterSinir: 0,
-      sifreSonuc: "",
       // sifreKural: "^(?=.*?[A-Z])(?=.*?[a-z]).{6,}$", // regex kullanımı bakılıyor
+
+      //labelResult// musterinin yanlış girdiği değerlere karşın hata metini yazdırıp uyarıyoruz
+      kullaniciAdiResultText: "Kullanıcı girişi başarılı",
+      kullaniciAdiResultTex2: "Kullanıcı girişi başarısız",
+
+      mailResultText: "Mail girişi başarılı",
+      mailResultText2: "Mail girişi başarısız",
+
+      sifreResultText: "Şifre girişi başarılı",
+      sifreResultText2: "Şifre girişi başarısız",
+
+      sifreTekrarResultText: "Şifre tekrarı başarılı",
+      sifreTekrarResultText2: "Şifre tekrarı başarısız",
+
+      sifreSonucResultText: "Şifreler eşleşti",
+      sifreSonucResultText2: "Şifreler eşleşleşmedi",
     };
   },
   methods: {
-    // c() {
-    //   if (!!this.a != 5) {
-    //     console.log("+");
-    //   }
-    //   console.log("-");
-    // },
-
-    //form içerisinde 2 adet şifre girisi vardır Girilen değerler model aracılığı ile viewa gider
+    /*fieldalarımızı oluşturarak metot veya bir fonksiyon içerisinde tanımlı olan fielda dataya ulaşıp işlemlerimizi yapabiliriz.
+      buradaki amaç her istek olduğunda ram a defalarca örneğini çıkarmak kopyasını almak yerine 1 kez çıkartıp işlem yapmamızı sağlar
+      bunda bağımlılıktan kurtulmuş oluruz buna DIP deriz. Dependency injection. */
 
     signUp: function (
       _kullaniciAdi,
@@ -122,26 +128,47 @@ export default {
       if (_kullaniciAdi != null) {
         //text alanı
         console.log("Kullanıcı girişi başarılı");
+        document.getElementById("_mail").innerHTML =
+          this.kullaniciAdiResultText;
+      } else {
+        document.getElementById("_mail").innerHTML =
+          this.kullaniciAdiResultTex2;
+        return false;
       }
-      false;
       if (_mail != null && _mailKural.test(_mail)) {
         //text alanı
-        console.log("Mail girişi başarılı");
+        console.log("Mail girisi başarılı");
+        document.getElementById("_mail").innerHTML = this.mailResultText;
+      } else {
+        document.getElementById("_mail").innerHTML = this.mailResultText2;
+        return false;
       }
-      false;
+
       if (_sifre != null && _sifreKural.test(_sifre)) {
         //text alanı
         console.log("Şifre girişi başarılı");
+        document.getElementById("_mail").innerHTML = this.sifreResultText;
+      } else {
+        document.getElementById("_mail").innerHTML = this.sifreResultText2;
+        return false;
       }
 
       if (_sifreTekrar != null && _sifreKural.test(_sifreTekrar)) {
         //text alanı
         console.log("Şifre tekrarı başarılı");
+        document.getElementById("_mail").innerHTML = this.sifreTekrarResultText;
+      } else {
+        document.getElementById("_mail").innerHTML =
+          this.sifreTekrarResultText2;
+        return false;
       }
       if (_sifre == _sifreTekrar) {
         //text alanı
         console.log("Şifreler eşleşti");
-        return true;
+        document.getElementById("_mail").innerHTML = this.sifreSonucResultText;
+      } else {
+        document.getElementById("_mail").innerHTML = this.sifreSonucResultText2;
+        return false;
       }
       this.signUpClear();
       return false;
@@ -149,54 +176,6 @@ export default {
     signUpClear: function () {
       this.$refs.form.reset();
     },
-
-    // passWordLogin(_kullaniciAdi, _mail, _sifre, _sifreTekrar) {
-    //   _kullaniciAdi = this.kullaniciAdi;
-    //   _mail = this.mail;
-
-    //   _sifre = this.sifreKural.test(this.sifre);
-    //   _sifreTekrar = this.sifreKural.test(this.sifreTekrar);
-
-    //   // _sifre = this.sifre;
-    //   // _sifreTekrar = this.sifreTekrar;
-
-    //   // this.sifreKural.test(_sifre);
-    //   // this.sifreKural.test(_sifreTekrar);
-    //   // _sifre(this.sifreKural);
-    //   // _sifreTekrar(this.sifreKural);
-
-    //   if (
-    //     _kullaniciAdi != null &&
-    //     // _mail(this.mailRules) !== true &&
-    //     _sifre == _sifreTekrar &&
-    //     _sifre != null &&
-    //     _sifreTekrar != null
-    //   ) {
-    //     this.sifreSonuc = "Şifreler aynı";
-    //     this.reset();
-    //     return true;
-    //   } else {
-    //     this.sifreSonuc = "Geçersiz şifre";
-    //     this.reset();
-    //     return false;
-    //   }
-
-    //   // if (_sifre == _sifreTekrar && _sifre != null && _sifreTekrar != null) {
-    //   //   this.sifreSonuc = "Şifreler aynı";
-    //   //   this.reset();
-    //   //   return true;
-    //   // } else {
-    //   //   this.sifreSonuc = "Geçersiz şifre";
-    //   //   this.reset();
-    //   //   return false;
-    //   // }
-    // },
-
-    // reset() {
-    //   /*getelementby id ve ref : document içerisindeki bir elemente veya idye ulaşmak istersek bunu $ref kullanarak da ulaşabiliriz
-    //   asağıda iste bir kosul belirtmeden form içerisindeki istenilen elementlerin değerlirini temizledik*/
-    //   this.$refs.form.reset();
-    // },
   },
 };
 </script>
@@ -212,17 +191,19 @@ export default {
   margin-left: auto;
   margin-right: auto;
   background-color: darkseagreen;
-  width: 400px;
-  height: 520px;
+  width: 450px;
+  height: 540px;
 }
 img {
   border-radius: 50%;
 }
-btnClick {
+.btnClick {
   background-color: lightblue;
-  float: right;
+  margin-right: 10px;
 }
-btnClear {
-  margin-left: 5px;
+.btnClear {
+  float: right;
+  margin-right: -10px;
+  background-color: red;
 }
 </style>
