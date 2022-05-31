@@ -89,7 +89,7 @@ export default {
       sifreTekrar: "",
       counter: 0,
 
-      //valid-regex
+      //valid-regex Müsterinin girdiği değerleri regex ile kontrol edip sifrenin gücünü müsteriye gösteriyoruz
       mailKural: /.+@.+\.com+/,
       //Çok Kötü karakter güçlüğü: 8 karakter ve 1 küçük harf veye 1 büyük harf
       tooBadStrength: /(?=.*[a-z])[a-za-z]{8,}$/,
@@ -172,7 +172,7 @@ export default {
         document.getElementById("_mail").innerHTML = this.mailResultText2;
         return false;
       }
-
+// her farklı sorguda aynı field üzerinden boş mu kontrolu yapmak yerine tek seferde sorguyu kontrol edip butun if içerisine yayıyoruz
       if (_sifre != null) {
         if (_tooBadStrength.test(_sifre) || _tooBadStrength2.test(_sifre)) {
           console.log("Şifre gücünüz çok kötü");
