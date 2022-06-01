@@ -8,17 +8,17 @@
       <v-row justify="space-between">
         <v-col>
           <!--form içerisinde bulunan datalar tetiklenme ile kayıt altına alınır.-->
-          <v-form ref="form" id="forms" @submit="signUp">
+          <v-form ref="form" id="forms" v-model="valid" lazy-validation>
             <!--değer girişleri için gereken inputlar-->
 
             <div @keyup="signUp">
               <tr>
                 <td>
                   <v-text-field
-                    style="width: 250px"
+                    v-model="kullaniciAdi"
+                    style="width: 220px"
                     label="Kullanıcı Adı"
                     placeholder="abcd123"
-                    v-model="kullaniciAdi"
                   ></v-text-field>
                 </td>
                 <td id="kullaniciAdiResult"></td>
@@ -30,7 +30,7 @@
                 required
             -->
                   <v-text-field
-                    style="width: 250px"
+                    style="width: 220px"
                     v-model="mail"
                     label="Mail"
                     placeholder="sa@gmail.com"
@@ -46,7 +46,7 @@
                     label="Şifre"
                     placeholder="Ankara"
                     v-model="sifre"
-                    style="width: 250px"
+                    style="width: 220px"
                   >
                   </v-text-field>
                 </td>
@@ -56,7 +56,7 @@
               <tr>
                 <td>
                   <v-text-field
-                    style="width: 250px"
+                    style="width: 220px"
                     label="Şifre Tekrar"
                     placeholder="Ankara"
                     v-model="sifreTekrar"
@@ -69,19 +69,27 @@
                 </td>
               </tr>
               <tr>
-                <td style="float: left">
-                  <!--Karakter sınırı: girilen değer 2.tekrarda aynı olmalıdır-->
-                  <v-slider
-                    v-model="slider"
-                    label="Max characters"
-                    style="width: 220px"
-                  ></v-slider>
-                </td>
-                <td style="float: right">
-                  <!--şartlar sağlanırsa kayıt olunup başarılı mesajı gösterilsin.-->
-                  <v-btn class="btnClick" type="submit"> Kayıt ol </v-btn>
-                  <v-btn class="btnClear" @click="signUpClear">Temizle</v-btn>
-                </td>
+                <v-col>
+                  <td style="float: left">
+                    <!--Karakter sınırı: girilen değer 2.tekrarda aynı olmalıdır-->
+                    <!-- <v-slider
+                      v-model="rules"
+                      :rules="kullaniciAdi"
+                      label="How many?"
+                      step="1"
+                      style="width: 200px"
+                      thumb-label="always"
+                      ticks
+                    ></v-slider> -->
+                  </td>
+                  <td style="float: right">
+                    <!--şartlar sağlanırsa kayıt olunup başarılı mesajı gösterilsin.-->
+                    <v-btn class="btnClick" type="submit" @click="signUp">
+                      Kayıt ol
+                    </v-btn>
+                    <v-btn class="btnClear" @click="reset">Temizle</v-btn>
+                  </td>
+                </v-col>
               </tr>
             </div>
           </v-form>
@@ -100,6 +108,14 @@ export default {
   components: { passwordMeter },
   data() {
     return {
+      valid: true,
+      //?? soru
+      // sifreGuclugu : {
+      //   cokKotu: "Çok kötü",
+      // kotu: "Kötü",
+      // orta: "Orta",
+      // iyi: "İyi",
+      // },
       cokKotu: "Çok kötü",
       kotu: "Kötü",
       orta: "Orta",
@@ -110,7 +126,8 @@ export default {
       mail: "",
       sifre: "",
       sifreTekrar: "",
-
+      // value: 0,
+      // rules: [(v) => v >= 8 || "8 harften az olamaz"],
       //valid-regex Müsterinin girdiği değerleri regex ile kontrol edip sifrenin gücünü müsteriye gösteriyoruz
       mailKural: /.+@.+\.com+/,
       //Çok Kötü karakter güçlüğü: 8 karakter ve 1 küçük harf veye 1 büyük harf
@@ -176,7 +193,8 @@ export default {
       _midStrength = this.midStrength;
       _goodStrength = this.goodStrength;
 
-      if (_kullaniciAdi != null) {
+      // if (_kullaniciAdi != null && _kullaniciAdi.length >= 6) {
+      if (_kullaniciAdi != null && _kullaniciAdi.length >= 8) {
         //text alanı
         console.log("Kullanıcı girişi başarılı");
         document.getElementById("kullaniciAdiResult").innerHTML =
@@ -251,9 +269,12 @@ export default {
       // this.signUpClear();
       return false;
     },
-    signUpClear: function () {
+    // signUpClear: function () {
+    //   this.$refs.form.reset();
+    //   // document.getElementById("forms").reset();
+    // },
+    reset() {
       this.$refs.form.reset();
-      // document.getElementById("forms").reset();
     },
   },
 };
@@ -273,7 +294,7 @@ body {
   margin-left: auto;
   margin-right: auto;
   background-color: darkseagreen;
-  width: 450px;
+  width: 550px;
   height: 540px;
 }
 img {
