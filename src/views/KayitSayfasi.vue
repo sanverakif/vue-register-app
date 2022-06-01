@@ -1,58 +1,80 @@
 <template>
-  <v-form>
-    <p id="_mail"></p>
-    <div class="mainDiv">
-      <!-- {{ c() }} -->
-      <br /><br />
-      <div><img class="center" src="../assets/userIcon.png" /></div>
-      <v-container>
-        <v-row justify="space-between">
-          <v-col>
-            <!--form içerisinde bulunan datalar tetiklenme ile kayıt altına alınır.-->
-            <v-form ref="form" id="forms" @submit="signUp">
-              <!--değer girişleri için gereken inputlar-->
-              <v-text-field
-                style="width: 300px"
-                label="Kullanıcı Adı"
-                placeholder="abcd123"
-                id="kullaniciAdi"
-                v-model="kullaniciAdi"
-              ></v-text-field>
+  <div class="mainDiv">
+    <!-- <p id="_mail"></p> -->
 
-              <!--İnputa girişin sağlanması için belirtilen şekilde girilmelidir ve bunun geçerli olması için ise required değerini kullanmamız gerekmektedir.:
+    <br /><br />
+    <div><img class="center" src="../assets/userIcon.png" /></div>
+    <v-container>
+      <v-row justify="space-between">
+        <v-col>
+          <!--form içerisinde bulunan datalar tetiklenme ile kayıt altına alınır.-->
+          <v-form ref="form" id="forms" @submit="signUp">
+            <!--değer girişleri için gereken inputlar-->
+
+            <div @keydown="signUp">
+              <tr>
+                <td>
+                  <v-text-field
+                    style="width: 250px"
+                    label="Kullanıcı Adı"
+                    placeholder="abcd123"
+                    v-model="kullaniciAdi"
+                  ></v-text-field>
+                </td>
+                <td id="kullaniciAdiResult"></td>
+              </tr>
+              <tr>
+                <td>
+                  <!--İnputa girişin sağlanması için belirtilen şekilde girilmelidir ve bunun geçerli olması için ise required değerini kullanmamız gerekmektedir.:
               rules="mailRules"
                 required
             -->
-              <v-text-field
-                style="width: 300px"
-                v-model="mail"
-                label="Mail"
-                placeholder="sa@gmail.com"
-              >
-              </v-text-field>
-              <p id="_mail"></p>
-
-              <!--sifre aynı olmalı-karakter kontrolu- 1 büyük 1 küçük dahil en az 8 karakter-şifre güçlüğü belirlenicek.-->
-              <v-text-field
-                label="Şifre"
-                placeholder="Ankara"
-                v-model="sifre"
-                style="width: 300px"
-              >
-              </v-text-field>
-              <v-text-field
-                style="width: 300px"
-                label="Şifre Tekrar"
-                placeholder="Ankara"
-                v-model="sifreTekrar"
-              ></v-text-field>
-              <v-col>
+                  <v-text-field
+                    style="width: 250px"
+                    v-model="mail"
+                    label="Mail"
+                    placeholder="sa@gmail.com"
+                  >
+                  </v-text-field>
+                </td>
+                <td id="mailResult"></td>
+              </tr>
+              <tr>
+                <td>
+                  <!--sifre aynı olmalı-karakter kontrolu- 1 büyük 1 küçük dahil en az 8 karakter-şifre güçlüğü belirlenicek.-->
+                  <v-text-field
+                    label="Şifre"
+                    placeholder="Ankara"
+                    v-model="sifre"
+                    style="width: 250px"
+                  >
+                  </v-text-field>
+                </td>
+                <password-meter :password="sifre" />
+                <td><p id="sifre"></p></td>
+              </tr>
+              <tr>
+                <td>
+                  <v-text-field
+                    style="width: 250px"
+                    label="Şifre Tekrar"
+                    placeholder="Ankara"
+                    v-model="sifreTekrar"
+                  ></v-text-field>
+                </td>
+                <password-meter :password="sifreTekrar" />
+                <td>
+                  <p id="sifreSonuc"></p>
+                  <p id="sifreSonucResultText"></p>
+                </td>
+              </tr>
+              <tr>
                 <td style="float: left">
                   <!--Karakter sınırı: girilen değer 2.tekrarda aynı olmalıdır-->
                   <v-slider
                     v-model="slider"
                     label="Max characters"
-                    style="width: 200px"
+                    style="width: 220px"
                   ></v-slider>
                 </td>
                 <td style="float: right">
@@ -60,34 +82,34 @@
                   <v-btn class="btnClick" type="submit"> Kayıt ol </v-btn>
                   <v-btn class="btnClear" @click="signUpClear">Temizle</v-btn>
                 </td>
-              </v-col>
-            </v-form>
-          </v-col>
-        </v-row>
-      </v-container>
-    </div>
-  </v-form>
+              </tr>
+            </div>
+          </v-form>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script>
+import passwordMeter from "vue-simple-password-meter";
+// import Password from "vue-password-strength-meter";
 export default {
   //router temsil alanı
   name: "KayitSayfasi",
-
+  components: { passwordMeter },
   data() {
     return {
-      sifreGucu: {
-        cokKotu: "Çok kötü",
-        kotu: "Kotu",
-        orta: "Orta",
-        iyi: "İyi",
-      },
+      cokKotu: "Çok kötü",
+      kotu: "Kötü",
+      orta: "Orta",
+      iyi: "İyi",
+
       //data
       kullaniciAdi: "",
       mail: "",
       sifre: "",
       sifreTekrar: "",
-      counter: 0,
 
       //valid-regex Müsterinin girdiği değerleri regex ile kontrol edip sifrenin gücünü müsteriye gösteriyoruz
       mailKural: /.+@.+\.com+/,
@@ -100,7 +122,7 @@ export default {
       midStrength: /(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
       //İyi karakter güçlüğü: 1 büyük,1 küçük,1 sayı ve 1 özel karakter
       goodStrength:
-        /(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+        /(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?.&])[A-Za-z\d@$!%*#?.&]{8,}$/,
 
       // En az 8 karakter, 1 büyük ve 1 küçük harf
       sifreKural: /(?=.*[a-z])(?=.*[A-Z])[a-zA-Z]{8,}$/,
@@ -117,8 +139,8 @@ export default {
       sifreResultText: "Şifre girişi başarılı",
       sifreResultText2: "Şifre girişi başarısız",
 
-      sifreTekrarResultText: "Şifre tekrarı başarılı",
-      sifreTekrarResultText2: "Şifre tekrarı başarısız",
+      // sifreTekrarResultText: "Şifre tekrarı başarılı",
+      // sifreTekrarResultText2: "Şifre tekrarı başarısız",
 
       sifreSonucResultText: "Şifreler eşleşti",
       sifreSonucResultText2: "Şifreler eşleşleşmedi",
@@ -157,37 +179,37 @@ export default {
       if (_kullaniciAdi != null) {
         //text alanı
         console.log("Kullanıcı girişi başarılı");
-        document.getElementById("_mail").innerHTML =
+        document.getElementById("kullaniciAdiResult").innerHTML =
           this.kullaniciAdiResultText;
       } else {
-        document.getElementById("_mail").innerHTML =
+        document.getElementById("kullaniciAdiResult").innerHTML =
           this.kullaniciAdiResultTex2;
         return false;
       }
       if (_mail != null && _mailKural.test(_mail)) {
         //text alanı
         console.log("Mail girisi başarılı");
-        document.getElementById("_mail").innerHTML = this.mailResultText;
+        document.getElementById("mailResult").innerHTML = this.mailResultText;
       } else {
-        document.getElementById("_mail").innerHTML = this.mailResultText2;
+        document.getElementById("mailResult").innerHTML = this.mailResultText2;
         return false;
       }
-// her farklı sorguda aynı field üzerinden boş mu kontrolu yapmak yerine tek seferde sorguyu kontrol edip butun if içerisine yayıyoruz
+      // her farklı sorguda aynı field üzerinden boş mu kontrolu yapmak yerine tek seferde sorguyu kontrol edip butun if içerisine yayıyoruz
       if (_sifre != null) {
         if (_tooBadStrength.test(_sifre) || _tooBadStrength2.test(_sifre)) {
           console.log("Şifre gücünüz çok kötü");
-          document.getElementById("_mail").innerHTML = this.sifreGucu.cokKotu;
+          document.getElementById("sifre").innerHTML = this.cokKotu;
         } else if (_sifre != null && _badStrength.test(_sifre)) {
           console.log("Şifre gücünüz kötü");
-          document.getElementById("_mail").innerHTML = this.sifreGucu.kotu;
+          document.getElementById("sifre").innerHTML = this.kotu;
         } else if (_sifre != null && _midStrength.test(_sifre)) {
           console.log("Şifre gücünüz orta");
-          document.getElementById("_mail").innerHTML = this.sifreGucu.orta;
+          document.getElementById("sifre").innerHTML = this.orta;
         } else if (_sifre != null && _goodStrength.test(_sifre)) {
           console.log("Şifre gücünüz iyi");
-          document.getElementById("_mail").innerHTML = this.sifreGucu.iyi;
+          document.getElementById("sifre").innerHTML = this.iyi;
         } else {
-          document.getElementById("_mail").innerHTML = this.sifreResultText2;
+          document.getElementById("sifre").innerHTML = this.sifreResultText2;
           return false;
         }
       }
@@ -198,18 +220,19 @@ export default {
           _tooBadStrength2.test(_sifreTekrar)
         ) {
           console.log("Şifre gücünüz çok kötü");
-          document.getElementById("_mail").innerHTML = this.sifreGucu.cokKotu;
+          document.getElementById("sifreSonuc").innerHTML = this.cokKotu;
         } else if (_sifreTekrar != null && _badStrength.test(_sifreTekrar)) {
           console.log("Şifre gücünüz kötü");
-          document.getElementById("_mail").innerHTML = this.sifreGucu.kotu;
+          document.getElementById("sifreSonuc").innerHTML = this.kotu;
         } else if (_sifreTekrar != null && _midStrength.test(_sifreTekrar)) {
           console.log("Şifre gücünüz orta");
-          document.getElementById("_mail").innerHTML = this.sifreGucu.orta;
+          document.getElementById("sifreSonuc").innerHTML = this.orta;
         } else if (_sifreTekrar != null && _goodStrength.test(_sifreTekrar)) {
           console.log("Şifre gücünüz iyi");
-          document.getElementById("_mail").innerHTML = this.sifreGucu.iyi;
+          document.getElementById("sifreSonuc").innerHTML = this.iyi;
         } else {
-          document.getElementById("_mail").innerHTML = this.sifreResultText2;
+          document.getElementById("sifreSonuc").innerHTML =
+            this.sifreResultText2;
           return false;
         }
       }
@@ -217,22 +240,29 @@ export default {
       if (_sifre == _sifreTekrar) {
         //text alanı
         console.log("Şifreler eşleşti");
-        document.getElementById("_mail").innerHTML = this.sifreSonucResultText;
+
+        document.getElementById("sifreSonucResultText").innerHTML =
+          this.sifreSonucResultText;
       } else {
-        document.getElementById("_mail").innerHTML = this.sifreSonucResultText2;
+        document.getElementById("sifreSonucResultText").innerHTML =
+          this.sifreSonucResultText2;
         return false;
       }
-      this.signUpClear();
+      // this.signUpClear();
       return false;
     },
     signUpClear: function () {
       this.$refs.form.reset();
+      // document.getElementById("forms").reset();
     },
   },
 };
 </script>
 
 <style>
+body {
+  background-color: lightblue;
+}
 .center {
   display: block;
   margin-left: auto;
@@ -252,10 +282,11 @@ img {
 .btnClick {
   background-color: lightblue;
   margin-right: 10px;
+  width: 80px;
 }
 .btnClear {
   float: right;
   margin-right: -10px;
-  background-color: red;
+  width: 80px;
 }
 </style>

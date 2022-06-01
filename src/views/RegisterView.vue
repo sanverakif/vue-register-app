@@ -1,5 +1,4 @@
-<!--daha sonra bakılıcak-->
-<!-- 
+<!-- daha sonra bakılıcak
 
 <template>
   <section class="vh-100" style="background-color: #eee">
@@ -116,4 +115,5 @@ export default {
   //router temsil alanı
   name: "RegisterView",
 };
-</script> -->
+</script>
+ -->
