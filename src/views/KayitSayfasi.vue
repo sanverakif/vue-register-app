@@ -11,7 +11,7 @@
           <v-form ref="form" id="forms" @submit="signUp">
             <!--değer girişleri için gereken inputlar-->
 
-            <div @keydown="signUp">
+            <div @keyup="signUp">
               <tr>
                 <td>
                   <v-text-field
